@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <title >Info </title>
+   </head>
+   
+   <body>
+   <!-- Include _menu.html -->
+      <th:block th:include="/_menu"></th:block>  
+      
+     <h3>Welcome : <span th:utext="${#request.userPrincipal.name}"></span></h3>
+     
+     <div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
+   </body>
+</html>
