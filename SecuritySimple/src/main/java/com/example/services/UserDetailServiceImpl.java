@@ -41,7 +41,8 @@ public class UserDetailServiceImpl implements UserDetailsService, Services<AppUs
 		 
 		List<Role> list = rdao.getRolesByUserName(username);
 		List<? extends GrantedAuthority> grantList = list.stream().map(s->new SimpleGrantedAuthority(s.getName())).toList();
-		
+		/// PROBLEM HERE
+		System.out.println(grantList.get(0).getAuthority());
 		UserDetails userDetails = (UserDetails) new User(user.getName(), user.getPassword(), grantList);
 		return userDetails;
 	}
@@ -52,14 +53,14 @@ public class UserDetailServiceImpl implements UserDetailsService, Services<AppUs
 	
 	@Override
 	public AppUser getOneByName(String name) {
-		System.out.println(name);
+		 
 		return udao.findUserByName(name);
 	}
 
 	@Override
 	public List<AppUser> getAll() {
 		// TODO Auto-generated method stub
-		return null;
+		return udao.getAll();
 	}
 
 	@Override

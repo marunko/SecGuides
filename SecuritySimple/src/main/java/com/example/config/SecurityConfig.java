@@ -43,11 +43,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter   {
 		http.csrf().disable();
 
 		// The pages does not require login
-		http.authorizeRequests().antMatchers("/", "/login", "/logout").permitAll();
+		http.authorizeRequests().antMatchers("/", "/form", "/logout", "/register").permitAll();
 
 		// /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
 		// If no login, it will redirect to /login page.
-		http.authorizeRequests().antMatchers("/info").access("hasAnyRole('user', 'admin')");
+	 http.authorizeRequests().antMatchers("/info").access("hasAuthority('user')");
 
 		// For ADMIN only.
 		http.authorizeRequests().antMatchers("/admin").access("hasRole('admin')");
@@ -61,13 +61,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter   {
 		http.authorizeRequests().and().formLogin()//
 				// Submit URL of login page.
 				.loginProcessingUrl("/j_spring_security_check") // Submit URL
-				.loginPage("/login")//
+				.loginPage("/form")//
 				.defaultSuccessUrl("/info")//
-				.failureUrl("/login?error=true")//
+				.failureUrl("/form?error=true")//
 				.usernameParameter("username")//
 				.passwordParameter("password")
 				// Config for Logout Page
-				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessful");
+				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
 
 		// Config Remember Me.
 		http.authorizeRequests().and() //

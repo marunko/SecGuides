@@ -29,7 +29,13 @@ public class AppUserDao implements DaoCRUD<AppUser> {
 	public AppUser findUserByName(String name) {
 		Query query = em.createQuery(" from AppUser u WHERE u.name LIKE :name");
 		query.setParameter("name", name);
-		return (AppUser)query.getSingleResult();
+		try {
+			return (AppUser)query.getSingleResult();
+		}
+		catch(Exception e){
+			return null;
+		}
+		 
 	}
 	
 	public AppUser findUserById(Long id) {
@@ -78,7 +84,7 @@ public class AppUserDao implements DaoCRUD<AppUser> {
 	@Override
 	public List<AppUser> getAll() {
 		// TODO Auto-generated method stub
-		return null;
+		return em.createQuery(" from AppUser u").getResultList();
 	}
 
 	@Override

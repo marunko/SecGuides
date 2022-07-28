@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <title >Registration</title>
+   </head>
+   
+   <body>
+   <!-- Include _menu.html -->
+      <th:block th:include="/_menu"></th:block>  
+      <div> 
+			<form name="form" id="form">
+				<input type="text" name="name">
+				<input type="text" name="password">
+				<input type="submit" name="submit">
+			</form>
+		</div>
+      
+      <script type="text/javascript">
+		function send(data) {
+			var x = new XMLHttpRequest();
+
+			x.open('POST','/register');
+			x.setRequestHeader('Content-Type', 'application/json');
+			x.send(JSON.stringify(data));
+			x.onload = ()=>{
+					console.log(x.responseText);
+					console.log(x.status);
+			};
+		}
+	 	let form = document.querySelector("#form");	
+		form.addEventListener("submit", (e)=>{
+				e.preventDefault();
+					let data = {
+						name: form["name"].value,
+						password: form["password"].value
+					}
+	
+					 
+				 send(data);
+		});
+
+</script>
+   </body>
+</html>
