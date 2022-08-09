@@ -1,5 +1,12 @@
 package com.example.config;
 
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +17,12 @@ import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.example.services.UserDetailServiceImpl;
 
@@ -21,7 +31,7 @@ import com.example.services.UserDetailServiceImpl;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter   {
-
+	 
 	@Autowired
 	private DataSource dataSource;
 	// UserDetailService implementation class Initialize here
@@ -50,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter   {
 	 http.authorizeRequests().antMatchers("/info").access("hasAuthority('user')");
 
 		// For ADMIN only.
-		http.authorizeRequests().antMatchers("/admin").access("hasRole('admin')");
+		http.authorizeRequests().antMatchers("/admin").access("hasAuthority('admin')");
 
 		// When the user has logged in as XX.
 		// But access a page that requires role YY,
@@ -68,11 +78,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter   {
 				.passwordParameter("password")
 				// Config for Logout Page
 				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
-
+	// Filter Before 
+		  http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.NEVER));
+		
 		// Config Remember Me.
 		http.authorizeRequests().and() //
 				.rememberMe().tokenRepository(this.persistentTokenRepository()) //
 				.tokenValiditySeconds(1 * 24 * 60 * 60); // 24h
+		 
 	}
 	
 		// Password Encryption
